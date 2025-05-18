@@ -1,0 +1,24 @@
+package FortuneMonBackEnd.fortuneMon.domain;
+
+import FortuneMonBackEnd.fortuneMon.domain.common.BaseEntity;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+public class Pokemon extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 20)
+    private String name;
+
+    @Column(nullable = false, length = 255)
+    private String url;
+
+    @OneToMany(mappedBy = "pokemon")
+    private List<UserPokemon> userPokemons;
+
+}
