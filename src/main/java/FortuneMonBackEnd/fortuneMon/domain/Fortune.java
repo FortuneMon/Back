@@ -2,10 +2,14 @@ package FortuneMonBackEnd.fortuneMon.domain;
 
 import FortuneMonBackEnd.fortuneMon.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Fortune extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

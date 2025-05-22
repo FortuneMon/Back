@@ -2,11 +2,15 @@ package FortuneMonBackEnd.fortuneMon.domain;
 
 import FortuneMonBackEnd.fortuneMon.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Pokemon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +21,12 @@ public class Pokemon extends BaseEntity {
 
     @Column(nullable = false, length = 255)
     private String url;
+
+    @Column(nullable = false, length = 20)
+    private String type;
+
+    @Column(nullable = false, length = 20)
+    private String group;
 
     @OneToMany(mappedBy = "pokemon")
     private List<UserPokemon> userPokemons;
