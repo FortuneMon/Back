@@ -2,11 +2,15 @@ package FortuneMonBackEnd.fortuneMon.domain;
 
 import FortuneMonBackEnd.fortuneMon.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class UserFortune extends BaseEntity {
     @Id
     @GeneratedValue
@@ -19,6 +23,9 @@ public class UserFortune extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "fortune_id")
     private Fortune fortune;
+
+    @Column(nullable = false, length = 100)
+    private String advice;
 
     private LocalDate date;
 
