@@ -1,8 +1,13 @@
 package FortuneMonBackEnd.fortuneMon.DTO;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 // 나의 포켓몬 목록을 조회할 때 소유 여부 컬럼을 추가하여 반환하기 위한 형식
+@Getter
+@Setter
 public class UserPokemonDto {
     private Long id;
     private String name;
