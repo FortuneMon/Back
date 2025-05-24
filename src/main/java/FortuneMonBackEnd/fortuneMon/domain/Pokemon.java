@@ -26,7 +26,7 @@ public class Pokemon extends BaseEntity {
     private String type;
 
     @Column(nullable = false, length = 20)
-    private String group;
+    private String groupName;
 
     @OneToMany(mappedBy = "pokemon")
     private List<UserPokemon> userPokemons;
