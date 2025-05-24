@@ -1,6 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
-import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDto;
+import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDTO;
 import FortuneMonBackEnd.fortuneMon.domain.Pokemon;
 import FortuneMonBackEnd.fortuneMon.domain.UserPokemon;
 import FortuneMonBackEnd.fortuneMon.repository.PokemonRepository;
@@ -22,7 +22,7 @@ public class UserPokemonService {
         this.userPokemonRepository=userPokemonRepository;
     }
 
-    public List<UserPokemonDto> getUserPokemonsWithOwnership(Long userId){
+    public List<UserPokemonDTO> getUserPokemonsWithOwnership(Long userId){
         // DB에 존재하는 모든 포켓몬 가져오기
         List<Pokemon> allPokemons = pokemonRepository.findAll();
 
@@ -34,12 +34,12 @@ public class UserPokemonService {
                 .collect(Collectors.toSet());
 
         // 전체 포켓몬 Id를 참조하면서 유저가 가진 포켓몬 Id Set에 있는지를 확인하고 boolean 타입으로 저장하고 return
-        return allPokemons.stream().map(pokemon -> new UserPokemonDto(
+        return allPokemons.stream().map(pokemon -> new UserPokemonDTO(
                 pokemon.getId(),
                 pokemon.getName(),
                 pokemon.getUrl(),
                 pokemon.getType(),
-                pokemon.getGroup(),
+                pokemon.getGroupName(),
                 userOwnedPokemon.contains(pokemon.getId())
         )).collect(Collectors.toList());
     }
