@@ -26,6 +26,12 @@ public class UserRoutine extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "routine_id")
+    private Routine routine;
+
     @OneToMany(mappedBy = "userRoutine")
     private List<RoutineLog> routineLog;
+
+
 }
