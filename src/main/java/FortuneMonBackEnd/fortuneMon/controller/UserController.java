@@ -5,6 +5,7 @@ import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
 import FortuneMonBackEnd.fortuneMon.apiPayload.ApiResponse;
 import FortuneMonBackEnd.fortuneMon.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,18 @@ public class UserController {
     @PostMapping("/signin")
     public ApiResponse<?> signin(@RequestBody @Valid UserRequestDTO.SignInRequestDTO request) {
         UserResponseDTO.SignInResponseDTO response = userService.signIn(request);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "Acccess Token 재발급", description =
+            "# Acccess Token 재발급 API 입니다. "
+    )
+    @PostMapping("/refresh")
+    public ApiResponse<?> refresh(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("refreshToken");
+
+        UserResponseDTO.RefreshTokenResponseDTO response = userService.refresh(authHeader, refreshToken);
         return ApiResponse.onSuccess(response);
     }
 

@@ -8,4 +8,6 @@ public interface UserService {
     UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.@Valid SignUpRequestDTO request);
 
     UserResponseDTO.SignInResponseDTO signIn(UserRequestDTO.@Valid SignInRequestDTO request);
+
+    UserResponseDTO.RefreshTokenResponseDTO refresh(String authHeader, String refreshToken);
 }

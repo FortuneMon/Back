@@ -25,4 +25,15 @@ public class UserResponseDTO {
         private String nickname;
         private LocalDateTime createdAt;
     }
+
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    @Getter
+    @Builder
+    public static class RefreshTokenResponseDTO {
+        private String newAccessToken;
+        private String nickname;
+    }
+
+
 }

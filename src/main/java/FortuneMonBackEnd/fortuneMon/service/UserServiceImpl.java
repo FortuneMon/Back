@@ -9,6 +9,9 @@ import FortuneMonBackEnd.fortuneMon.jwt.JwtUtil;
 import FortuneMonBackEnd.fortuneMon.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +67,37 @@ public class UserServiceImpl implements UserService {
                 .createdAt(user.getCreatedAt())
                 .nickname(user.getNickname())
                 .build();
+    }
+
+    @Override
+    public UserResponseDTO.RefreshTokenResponseDTO refresh(String authHeader, String refreshToken) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ") || refreshToken == null) {
+            throw new GeneralException(ErrorStatus.INVALID_TOKEN);
+        }
+
+        String expiredAccessToken = authHeader.substring(7);
+        String loginId;
+        System.out.println("expiredAccessToken = " + expiredAccessToken);
+
+        try {
+            loginId = jwtUtil.extractLoginIdIgnoreExpiration(expiredAccessToken);
+        } catch (Exception e) {
+            throw new GeneralException(ErrorStatus.INVALID_ACCESS_TOKEN);
+        }
+
+        String savedRefreshToken = refreshTokenService.getRefreshToken(loginId);
+
+        if (savedRefreshToken == null || !savedRefreshToken.equals(refreshToken)) {
+            throw new GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN);
+        }
+
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        return UserResponseDTO.RefreshTokenResponseDTO.builder()
+                .newAccessToken(jwtUtil.generateAccessToken(loginId))
+                .nickname(user.getNickname())
+                .build();
+
     }
 }
