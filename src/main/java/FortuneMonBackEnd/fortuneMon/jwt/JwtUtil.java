@@ -1,5 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,7 +54,10 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
             return true;
-        } catch (JwtException e) {
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "JWT 토큰이 만료되었습니다.");
+        }
+        catch (JwtException e) {
             return false;
         }
     }
@@ -64,5 +68,14 @@ public class JwtUtil {
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String extractLoginIdIgnoreExpiration(String expiredAccessToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(expiredAccessToken)
+                .getBody()
+                .getSubject();
     }
 }
