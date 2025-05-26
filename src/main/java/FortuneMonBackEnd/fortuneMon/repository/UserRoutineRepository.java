@@ -28,4 +28,6 @@ public interface UserRoutineRepository extends JpaRepository<UserRoutine, Long> 
     List<UserRoutineInfoResponseDTO> findUserRoutinesWithLog(@Param("userId") Long userId, @Param("today") LocalDate today);
 
     Optional<UserRoutine> findByUserIdAndRoutineId(Long userId, Long routineId);
+
+    List<UserRoutine> findAllByUserId(Long userId);
 }

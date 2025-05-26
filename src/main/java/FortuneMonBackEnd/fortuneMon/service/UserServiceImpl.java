@@ -20,7 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -207,5 +211,44 @@ public class UserServiceImpl implements UserService {
                 .routineName(routine.getName())
                 .isCompleted(routineLog.getIsCompleted())
                 .build();
+    }
+
+    @Override
+    public RoutineStatisticsResponse getMyRoutinesStatistics(LocalDate date) {
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        YearMonth month = YearMonth.from(date);
+        LocalDate startOfMonth = month.atDay(1);
+        LocalDate endOfMonth = month.atEndOfMonth();
+
+        List<UserRoutine> userRoutines = userRoutineRepository.findAllByUserId(userId);
+
+        List<Long> userRoutineIds = userRoutines.stream()
+                .map(UserRoutine::getId)
+                .toList();
+
+        List<RoutineLog> logs = routineLogRepository.findByUserRoutineIdInAndDateBetween(userRoutineIds, startOfMonth, endOfMonth);
+
+        Map<Long, Map<LocalDate, Boolean>> routineLogMap = logs.stream()
+                .collect(Collectors.groupingBy(
+                        log -> log.getUserRoutine().getId(),
+                        Collectors.toMap(RoutineLog::getDate, RoutineLog::getIsCompleted)
+                ));
+
+        List<RoutineStatisticsResponse.statisticsResponse> statistics = userRoutines.stream()
+                .map(ur -> RoutineStatisticsResponse.statisticsResponse.builder()
+                        .routineName(ur.getRoutine().getName())
+                        .daysStatistics(routineLogMap.getOrDefault(ur.getId(), new HashMap<>()))
+                        .build())
+                .toList();
+
+        return RoutineStatisticsResponse.builder()
+                .nickName(user.getNickname())
+                .statistics(statistics)
+                .build();
+
     }
 }

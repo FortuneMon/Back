@@ -1,9 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
-import FortuneMonBackEnd.fortuneMon.DTO.RoutineLogResponse;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
+import FortuneMonBackEnd.fortuneMon.DTO.*;
 import FortuneMonBackEnd.fortuneMon.apiPayload.ApiResponse;
 import FortuneMonBackEnd.fortuneMon.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,6 +81,15 @@ public class UserController {
     @PatchMapping("/routines/{id}/status")
     public ApiResponse<?> setMyRoutineStatus(@PathVariable("id") Long routineId) {
         RoutineLogResponse response = userService.setMyRoutineStatus(routineId);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "유저의 루틴 수행 관련 통계 조회", description =
+            "# 유저의 루틴 수행 관련 통계 조회 API 입니다. 로그인 후 진행하세요. "
+    )
+    @GetMapping("/routines/{date}/statistics")
+    public ApiResponse<?> getMyRoutineStatistics(@PathVariable LocalDate date) {
+        RoutineStatisticsResponse response = userService.getMyRoutinesStatistics(date);
         return ApiResponse.onSuccess(response);
     }
 

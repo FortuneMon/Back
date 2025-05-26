@@ -1,10 +1,9 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
-import FortuneMonBackEnd.fortuneMon.DTO.RoutineLogResponse;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
+import FortuneMonBackEnd.fortuneMon.DTO.*;
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 
 public interface UserService {
     UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.@Valid SignUpRequestDTO request);
@@ -20,4 +19,6 @@ public interface UserService {
     UserResponseDTO.UsersRoutineDTO deleteMyRoutines(Long routineId);
 
     RoutineLogResponse setMyRoutineStatus(Long routineId);
+
+    RoutineStatisticsResponse getMyRoutinesStatistics(LocalDate date);
 }
