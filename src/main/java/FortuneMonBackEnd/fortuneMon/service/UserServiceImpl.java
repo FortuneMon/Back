@@ -1,19 +1,30 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
-import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
+import FortuneMonBackEnd.fortuneMon.DTO.*;
 import FortuneMonBackEnd.fortuneMon.apiPayload.code.status.ErrorStatus;
 import FortuneMonBackEnd.fortuneMon.apiPayload.exception.GeneralException;
+import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
+import FortuneMonBackEnd.fortuneMon.domain.Routine;
+import FortuneMonBackEnd.fortuneMon.domain.RoutineLog;
 import FortuneMonBackEnd.fortuneMon.domain.User;
+import FortuneMonBackEnd.fortuneMon.domain.UserRoutine;
 import FortuneMonBackEnd.fortuneMon.jwt.JwtUtil;
+import FortuneMonBackEnd.fortuneMon.repository.RoutineLogRepository;
+import FortuneMonBackEnd.fortuneMon.repository.RoutineRepository;
 import FortuneMonBackEnd.fortuneMon.repository.UserRepository;
+import FortuneMonBackEnd.fortuneMon.repository.UserRoutineRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +34,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final UserRoutineRepository userRoutineRepository;
+    private final RoutineRepository routineRepository;
+    private final RoutineLogRepository routineLogRepository;
 
     @Override
     public UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.SignUpRequestDTO request) {
@@ -97,6 +111,143 @@ public class UserServiceImpl implements UserService {
         return UserResponseDTO.RefreshTokenResponseDTO.builder()
                 .newAccessToken(jwtUtil.generateAccessToken(loginId))
                 .nickname(user.getNickname())
+                .build();
+
+    }
+
+    @Override
+    public UserRoutineResponse getMyRoutines() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        List<UserRoutineInfoResponseDTO> routines =
+                userRoutineRepository.findUserRoutinesWithLog(userId, LocalDate.now());
+
+        return UserRoutineResponse.builder()
+                .nickname(user.getNickname())
+                .routines(routines)
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO.UsersRoutineDTO setMyRoutines(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = UserRoutine.builder()
+                .user(user)
+                .routine(routine)
+                .routineLog(null)
+                .build();
+
+        RoutineLog routineLog = RoutineLog.builder()
+                .userRoutine(userRoutine)
+                .date(LocalDate.now())
+                .isCompleted(false)
+                .build();
+
+        try {
+            userRoutineRepository.save(userRoutine);
+        } catch (DataIntegrityViolationException e) {
+            throw new GeneralException(ErrorStatus.ROUTINE_ALREADY_EXIST);
+        }
+
+        routineLogRepository.save(routineLog);
+
+        return UserResponseDTO.UsersRoutineDTO.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .message(routine.getName() + " 추가 완료")
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO.UsersRoutineDTO deleteMyRoutines(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = userRoutineRepository.findByUserIdAndRoutineId(userId, routineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        userRoutineRepository.delete(userRoutine);
+
+        return UserResponseDTO.UsersRoutineDTO.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .message(routine.getName() + " 삭제 완료")
+                .build();
+    }
+
+    @Override
+    public RoutineLogResponse setMyRoutineStatus(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = userRoutineRepository.findByUserIdAndRoutineId(userId, routineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        RoutineLog routineLog = routineLogRepository.findByUserRoutineIdAndDate(userRoutine.getId(), LocalDate.now())
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_LOG_NOT_FOUND));
+
+        routineLog.setIsCompleted(!routineLog.getIsCompleted());
+        routineLogRepository.save(routineLog);
+
+        return RoutineLogResponse.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .isCompleted(routineLog.getIsCompleted())
+                .build();
+    }
+
+    @Override
+    public RoutineStatisticsResponse getMyRoutinesStatistics(LocalDate date) {
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        YearMonth month = YearMonth.from(date);
+        LocalDate startOfMonth = month.atDay(1);
+        LocalDate endOfMonth = month.atEndOfMonth();
+
+        List<UserRoutine> userRoutines = userRoutineRepository.findAllByUserId(userId);
+
+        List<Long> userRoutineIds = userRoutines.stream()
+                .map(UserRoutine::getId)
+                .toList();
+
+        List<RoutineLog> logs = routineLogRepository.findByUserRoutineIdInAndDateBetween(userRoutineIds, startOfMonth, endOfMonth);
+
+        Map<Long, Map<LocalDate, Boolean>> routineLogMap = logs.stream()
+                .collect(Collectors.groupingBy(
+                        log -> log.getUserRoutine().getId(),
+                        Collectors.toMap(RoutineLog::getDate, RoutineLog::getIsCompleted)
+                ));
+
+        List<RoutineStatisticsResponse.statisticsResponse> statistics = userRoutines.stream()
+                .map(ur -> RoutineStatisticsResponse.statisticsResponse.builder()
+                        .routineName(ur.getRoutine().getName())
+                        .daysStatistics(routineLogMap.getOrDefault(ur.getId(), new HashMap<>()))
+                        .build())
+                .toList();
+
+        return RoutineStatisticsResponse.builder()
+                .nickName(user.getNickname())
+                .statistics(statistics)
                 .build();
 
     }

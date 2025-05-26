@@ -35,5 +35,14 @@ public class UserResponseDTO {
         private String nickname;
     }
 
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    @Getter
+    @Builder
+    public static class UsersRoutineDTO {
+        private String nickName;
+        private String routineName;
+        private String message;
 
+    }
 }

@@ -2,8 +2,7 @@ package FortuneMonBackEnd.fortuneMon.domain;
 
 import FortuneMonBackEnd.fortuneMon.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,16 +10,16 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "routine_id"})
+})
 public class UserRoutine extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 20)
-    private String category;
-
-    @Column(nullable = false, length = 20)
-    private String name;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -30,7 +29,7 @@ public class UserRoutine extends BaseEntity {
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
-    @OneToMany(mappedBy = "userRoutine")
+    @OneToMany(mappedBy = "userRoutine", cascade = CascadeType.ALL)
     private List<RoutineLog> routineLog;
 
 
