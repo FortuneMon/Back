@@ -2,11 +2,15 @@ package FortuneMonBackEnd.fortuneMon.service;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
+import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineInfoResponseDTO;
+import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
 import FortuneMonBackEnd.fortuneMon.apiPayload.code.status.ErrorStatus;
 import FortuneMonBackEnd.fortuneMon.apiPayload.exception.GeneralException;
+import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
 import FortuneMonBackEnd.fortuneMon.domain.User;
 import FortuneMonBackEnd.fortuneMon.jwt.JwtUtil;
 import FortuneMonBackEnd.fortuneMon.repository.UserRepository;
+import FortuneMonBackEnd.fortuneMon.repository.UserRoutineRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final UserRoutineRepository userRoutineRepository;
 
     @Override
     public UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.SignUpRequestDTO request) {
@@ -99,5 +107,20 @@ public class UserServiceImpl implements UserService {
                 .nickname(user.getNickname())
                 .build();
 
+    }
+
+    @Override
+    public UserRoutineResponse getMyRoutines() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        List<UserRoutineInfoResponseDTO> routines =
+                userRoutineRepository.findUserRoutinesWithLog(userId, LocalDate.now());
+
+        return UserRoutineResponse.builder()
+                .nickname(user.getNickname())
+                .routines(routines)
+                .build();
     }
 }

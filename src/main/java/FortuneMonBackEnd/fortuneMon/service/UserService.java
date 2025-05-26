@@ -2,6 +2,7 @@ package FortuneMonBackEnd.fortuneMon.service;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
+import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
 import jakarta.validation.Valid;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
     UserResponseDTO.SignInResponseDTO signIn(UserRequestDTO.@Valid SignInRequestDTO request);
 
     UserResponseDTO.RefreshTokenResponseDTO refresh(String authHeader, String refreshToken);
+
+    UserRoutineResponse getMyRoutines();
 }
