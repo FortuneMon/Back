@@ -14,5 +14,7 @@ public interface UserService {
 
     UserRoutineResponse getMyRoutines();
 
-    UserRoutineResponse setMyRoutines(Long routineId);
+    UserResponseDTO.UsersRoutineDTO setMyRoutines(Long routineId);
+
+    UserResponseDTO.UsersRoutineDTO deleteMyRoutines(Long routineId);
 }

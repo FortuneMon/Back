@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRoutineResponse setMyRoutines(Long routineId) {
+    public UserResponseDTO.UsersRoutineDTO setMyRoutines(Long routineId) {
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
@@ -158,12 +158,32 @@ public class UserServiceImpl implements UserService {
 
         routineLogRepository.save(routineLog);
 
-        List<UserRoutineInfoResponseDTO> routines =
-                userRoutineRepository.findUserRoutinesWithLog(userId, LocalDate.now());
-
-        return UserRoutineResponse.builder()
-                .nickname(user.getNickname())
-                .routines(routines)
+        return UserResponseDTO.UsersRoutineDTO.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .message(routine.getName() + " 추가 완료")
                 .build();
+    }
+
+    @Override
+    public UserResponseDTO.UsersRoutineDTO deleteMyRoutines(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = userRoutineRepository.findByUserIdAndRoutineId(userId, routineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        userRoutineRepository.delete(userRoutine);
+
+        return UserResponseDTO.UsersRoutineDTO.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .message(routine.getName() + " 삭제 완료")
+                .build();
+
     }
 }

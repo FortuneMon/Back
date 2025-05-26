@@ -29,7 +29,7 @@ public class UserRoutine extends BaseEntity {
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
-    @OneToMany(mappedBy = "userRoutine")
+    @OneToMany(mappedBy = "userRoutine", cascade = CascadeType.ALL)
     private List<RoutineLog> routineLog;
 
 

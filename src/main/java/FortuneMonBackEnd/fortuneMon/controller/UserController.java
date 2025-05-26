@@ -62,8 +62,23 @@ public class UserController {
     )
     @PostMapping("/routines/{id}")
     public ApiResponse<?> setMyRoutines(@PathVariable("id") Long routineId) {
-        UserRoutineResponse response = userService.setMyRoutines(routineId);
+        UserResponseDTO.UsersRoutineDTO response = userService.setMyRoutines(routineId);
         return ApiResponse.onSuccess(response);
     }
+
+    @Operation(summary = "유저의 진행중인 루틴 삭제", description =
+            "# 유저의 진행중인 루틴 삭제 API 입니다. 로그인 후 진행하세요. "
+    )
+    @DeleteMapping("/routines/{id}")
+    public ApiResponse<?> deleteMyRoutines(@PathVariable("id") Long routineId) {
+        UserResponseDTO.UsersRoutineDTO response = userService.deleteMyRoutines(routineId);
+        return ApiResponse.onSuccess(response);
+    }
+
+//    @PatchMapping("/routines/{id}/status")
+//    public ApiResponse<?> setMyRoutineStatus(@PathVariable("id") Long routineId) {
+//
+//    }
+
 
 }

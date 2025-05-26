@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRoutineRepository extends JpaRepository<UserRoutine, Long> {
@@ -25,4 +26,6 @@ public interface UserRoutineRepository extends JpaRepository<UserRoutine, Long> 
             "LEFT JOIN RoutineLog rl ON rl.userRoutine = ur AND rl.date = :today " +
             "WHERE ur.user.id = :userId")
     List<UserRoutineInfoResponseDTO> findUserRoutinesWithLog(@Param("userId") Long userId, @Param("today") LocalDate today);
+
+    Optional<UserRoutine> findByUserIdAndRoutineId(Long userId, Long routineId);
 }
