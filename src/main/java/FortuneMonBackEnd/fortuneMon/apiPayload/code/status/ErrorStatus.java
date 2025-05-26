@@ -34,7 +34,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 루틴 관련 응답 3000
     ROUTINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "ROUTINE_3001", "해당 루틴이 존재하지 않습니다."),
-    ROUTINE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "ROUTINE_3002", "해당 루틴은 이미 진행중입니다 !");
+    ROUTINE_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "ROUTINE_3002", "해당 루틴은 이미 진행중입니다 !"),
+    ROUTINE_LOG_NOT_FOUND(HttpStatus.BAD_REQUEST, "ROUTINE_3003", "해당 루틴 로그가 존재하지 않습니다.");
 
 
 

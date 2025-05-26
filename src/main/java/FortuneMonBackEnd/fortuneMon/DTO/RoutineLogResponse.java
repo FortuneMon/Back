@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoutineResponse {
-    private Long id;
-    private String name;
-
-
+public class RoutineLogResponse {
+    private String nickName;
+    private String routineName;
+    private Boolean isCompleted;
 }

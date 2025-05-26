@@ -1,9 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
-import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineInfoResponseDTO;
-import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
+import FortuneMonBackEnd.fortuneMon.DTO.*;
 import FortuneMonBackEnd.fortuneMon.apiPayload.code.status.ErrorStatus;
 import FortuneMonBackEnd.fortuneMon.apiPayload.exception.GeneralException;
 import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
@@ -184,6 +181,31 @@ public class UserServiceImpl implements UserService {
                 .routineName(routine.getName())
                 .message(routine.getName() + " 삭제 완료")
                 .build();
+    }
 
+    @Override
+    public RoutineLogResponse setMyRoutineStatus(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = userRoutineRepository.findByUserIdAndRoutineId(userId, routineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        RoutineLog routineLog = routineLogRepository.findByUserRoutineIdAndDate(userRoutine.getId(), LocalDate.now())
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_LOG_NOT_FOUND));
+
+        routineLog.setIsCompleted(!routineLog.getIsCompleted());
+        routineLogRepository.save(routineLog);
+
+        return RoutineLogResponse.builder()
+                .nickName(user.getNickname())
+                .routineName(routine.getName())
+                .isCompleted(routineLog.getIsCompleted())
+                .build();
     }
 }

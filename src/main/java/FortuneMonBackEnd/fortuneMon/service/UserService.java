@@ -1,5 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
+import FortuneMonBackEnd.fortuneMon.DTO.RoutineLogResponse;
 import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
@@ -17,4 +18,6 @@ public interface UserService {
     UserResponseDTO.UsersRoutineDTO setMyRoutines(Long routineId);
 
     UserResponseDTO.UsersRoutineDTO deleteMyRoutines(Long routineId);
+
+    RoutineLogResponse setMyRoutineStatus(Long routineId);
 }

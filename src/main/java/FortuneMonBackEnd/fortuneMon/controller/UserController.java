@@ -1,5 +1,6 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
+import FortuneMonBackEnd.fortuneMon.DTO.RoutineLogResponse;
 import FortuneMonBackEnd.fortuneMon.DTO.UserRequestDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserResponseDTO;
 import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
@@ -75,10 +76,14 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
-//    @PatchMapping("/routines/{id}/status")
-//    public ApiResponse<?> setMyRoutineStatus(@PathVariable("id") Long routineId) {
-//
-//    }
+    @Operation(summary = "유저의 진행중인 루틴 수행여부 수정", description =
+            "# 유저의 진행중인 루틴 삭제 API 입니다. 로그인 후 진행하세요. "
+    )
+    @PatchMapping("/routines/{id}/status")
+    public ApiResponse<?> setMyRoutineStatus(@PathVariable("id") Long routineId) {
+        RoutineLogResponse response = userService.setMyRoutineStatus(routineId);
+        return ApiResponse.onSuccess(response);
+    }
 
 
 }
