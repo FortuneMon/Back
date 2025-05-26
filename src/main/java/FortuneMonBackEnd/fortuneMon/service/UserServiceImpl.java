@@ -7,15 +7,18 @@ import FortuneMonBackEnd.fortuneMon.DTO.UserRoutineResponse;
 import FortuneMonBackEnd.fortuneMon.apiPayload.code.status.ErrorStatus;
 import FortuneMonBackEnd.fortuneMon.apiPayload.exception.GeneralException;
 import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
+import FortuneMonBackEnd.fortuneMon.domain.Routine;
+import FortuneMonBackEnd.fortuneMon.domain.RoutineLog;
 import FortuneMonBackEnd.fortuneMon.domain.User;
+import FortuneMonBackEnd.fortuneMon.domain.UserRoutine;
 import FortuneMonBackEnd.fortuneMon.jwt.JwtUtil;
+import FortuneMonBackEnd.fortuneMon.repository.RoutineLogRepository;
+import FortuneMonBackEnd.fortuneMon.repository.RoutineRepository;
 import FortuneMonBackEnd.fortuneMon.repository.UserRepository;
 import FortuneMonBackEnd.fortuneMon.repository.UserRoutineRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,8 @@ public class UserServiceImpl implements UserService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final UserRoutineRepository userRoutineRepository;
+    private final RoutineRepository routineRepository;
+    private final RoutineLogRepository routineLogRepository;
 
     @Override
     public UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.SignUpRequestDTO request) {
@@ -114,6 +119,44 @@ public class UserServiceImpl implements UserService {
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        List<UserRoutineInfoResponseDTO> routines =
+                userRoutineRepository.findUserRoutinesWithLog(userId, LocalDate.now());
+
+        return UserRoutineResponse.builder()
+                .nickname(user.getNickname())
+                .routines(routines)
+                .build();
+    }
+
+    @Override
+    public UserRoutineResponse setMyRoutines(Long routineId) {
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Routine routine = routineRepository.findById(routineId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
+
+        UserRoutine userRoutine = UserRoutine.builder()
+                .user(user)
+                .routine(routine)
+                .routineLog(null)
+                .build();
+
+        RoutineLog routineLog = RoutineLog.builder()
+                .userRoutine(userRoutine)
+                .date(LocalDate.now())
+                .isCompleted(false)
+                .build();
+
+        try {
+            userRoutineRepository.save(userRoutine);
+        } catch (DataIntegrityViolationException e) {
+            throw new GeneralException(ErrorStatus.ROUTINE_ALREADY_EXIST);
+        }
+
+        routineLogRepository.save(routineLog);
 
         List<UserRoutineInfoResponseDTO> routines =
                 userRoutineRepository.findUserRoutinesWithLog(userId, LocalDate.now());

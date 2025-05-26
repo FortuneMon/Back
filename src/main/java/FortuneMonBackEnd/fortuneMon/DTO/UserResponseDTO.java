@@ -42,5 +42,6 @@ public class UserResponseDTO {
     public static class UsersRoutineDTO {
         private String nickName;
 
+
     }
 }

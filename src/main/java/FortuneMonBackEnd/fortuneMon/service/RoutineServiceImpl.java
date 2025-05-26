@@ -21,6 +21,7 @@ public class RoutineServiceImpl implements RoutineService {
 
         List<RoutineResponse> responses = routines.stream()
                 .map(routine -> new RoutineResponse(
+                        routine.getId(),
                         routine.getName()
                 ))
                 .collect(Collectors.toList());

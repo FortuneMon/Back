@@ -13,4 +13,6 @@ public interface UserService {
     UserResponseDTO.RefreshTokenResponseDTO refresh(String authHeader, String refreshToken);
 
     UserRoutineResponse getMyRoutines();
+
+    UserRoutineResponse setMyRoutines(Long routineId);
 }

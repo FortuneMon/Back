@@ -57,4 +57,13 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
+    @Operation(summary = "유저의 진행중인 루틴 추가", description =
+            "# 유저의 진행중인 루틴 추가 API 입니다. 로그인 후 진행하세요. "
+    )
+    @PostMapping("/routines/{id}")
+    public ApiResponse<?> setMyRoutines(@PathVariable("id") Long routineId) {
+        UserRoutineResponse response = userService.setMyRoutines(routineId);
+        return ApiResponse.onSuccess(response);
+    }
+
 }
