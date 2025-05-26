@@ -1,6 +1,7 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDTO;
+import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
 import FortuneMonBackEnd.fortuneMon.service.UserPokemonService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,8 @@ public class UserPokemonController {
     // 유저의 id를 받아서 id를 기준으로 유저의 포켓몬 정보를 가져온다
     @GetMapping("/users/pokemons")
     public List<UserPokemonDTO> getPokemonsWithOwnership(){
-        return userPokemonService.getUserPokemonsWithOwnership(9999L); //임시 유저
+        Long userId = SecurityUtil.getCurrentUserId();
+        return userPokemonService.getUserPokemonsWithOwnership(userId);
     }
 
 }
