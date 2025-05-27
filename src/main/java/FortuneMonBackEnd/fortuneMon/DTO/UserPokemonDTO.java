@@ -13,17 +13,17 @@ public class UserPokemonDTO {
     private String name;
     private String url;
     private String type;
-    private String group;
+    private String groupName;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     boolean isOwned; // 유저가 가지고 있는지 여부를 저장하기 위한 변수
 
-    public UserPokemonDTO(Long id, String name, String url, String type, String group, boolean isOwned){
+    public UserPokemonDTO(Long id, String name, String url, String type, String groupName, boolean isOwned){
         this.id=id;
         this.name=name;
         this.url=url;
         this.type=type;
-        this.group=group;
+        this.groupName=groupName;
         this.isOwned=isOwned;
     }
 }
