@@ -20,7 +20,10 @@ jobs:
         with:
           java-version: 17
 
-      # application.yml 만들기   
+      # application.yml 만들기
+      - name: Ensure resource directory exists
+        run: mkdir -p src/main/resources
+        
       - name: generate application.yml file
         run: |
           cd ./src/main/resources
