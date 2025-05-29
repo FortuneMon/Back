@@ -8,4 +8,8 @@ ARG JAR_FILE=./build/libs/fortuneMon-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 # 컨테이너 시작시 명령어. 즉 해당 jar파일을 실행하겠다는 것
+<<<<<<< HEAD
 ENTRYPOINT [ "java", "-jar",  "/app.jar" ]
+=======
+ENTRYPOINT [ "java", "-jar",  "/app.jar" ]
+>>>>>>> feat/#9-루틴-관련-api-구현
