@@ -1,23 +1,28 @@
 package FortuneMonBackEnd.fortuneMon.service;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserMonsterBallResponseDTO;
-import FortuneMonBackEnd.fortuneMon.domain.MonsterBall;
-import FortuneMonBackEnd.fortuneMon.domain.UserBall;
-import FortuneMonBackEnd.fortuneMon.repository.MonsterBallRepository;
-import FortuneMonBackEnd.fortuneMon.repository.UserMonsterBallRepository;
+import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDTO;
+import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
+import FortuneMonBackEnd.fortuneMon.domain.*;
+import FortuneMonBackEnd.fortuneMon.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserMonsterBallServiceImpl implements UserMonsterBallService{
     private final UserMonsterBallRepository userMonsterBallRepository;
-    private final MonsterBallRepository monsterBallRepository;
+    private final PokemonBallRateRepository pokemonBallRateRepository;
+    private final PokemonRepository pokemonRepository;
+    private final UserPokemonRepository userPokemonRepository;
+    private final UserRepository userRepository;
 
+    //유저의 몬스터볼 조회
     @Override
     public List<UserMonsterBallResponseDTO> getUserMonsterBall(Long userId){
         List<UserBall> userBalls = userMonsterBallRepository.findByUserId(userId);
@@ -26,6 +31,38 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         userBalls.removeIf(UserBall::isOpen);
 
         return ballCount(userBalls);
+    }
+
+    //몬스터볼 오픈 및 포켓몬 도감에 저장
+    @Override
+    public UserPokemonDTO openMonsterBall(Long ballId){
+        double rand = Math.random();
+        double cumulative = 0.0;
+        PokemonBallRate pokemonRate = null;
+        List<PokemonBallRate> rates = pokemonBallRateRepository.findAllByBallId(ballId);
+
+        for(PokemonBallRate rate : rates){
+            cumulative += rate.getProbability();
+            if(rand < cumulative){
+                pokemonRate = rate;
+                break;
+            }
+        }
+        if(pokemonRate == null){
+            return null;
+        }
+        Pokemon pokemon = pokemonRepository.findById(pokemonRate.getPokemonId()).orElse(null);
+        Long userId = SecurityUtil.getCurrentUserId();
+        User user = userRepository.findById(userId).orElse(null);
+        UserPokemon userPokemon = new UserPokemon();
+
+        userPokemon.setUser(user);
+        userPokemon.setPokemon(pokemon);
+        userPokemon.setIsPartner(false);
+        userPokemonRepository.save(userPokemon); // 도감(유저가 가진 포켓몬) 저장
+
+        return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(), pokemon.getType(),
+                pokemon.getGroupName(), true);
     }
 
     // 각 몬스터볼의 개수를 세는 함수

@@ -1,12 +1,12 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserMonsterBallResponseDTO;
+import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDTO;
 import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
 import FortuneMonBackEnd.fortuneMon.service.UserMonsterBallService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +21,10 @@ public class UserMonsterBallController {
         Long userId = SecurityUtil.getCurrentUserId();
 
         return userMonsterBallService.getUserMonsterBall(userId);
+    }
+
+    @PostMapping("/{id}/open")
+    public UserPokemonDTO openMonsterBall(@PathVariable("id") Long ballId){
+        return userMonsterBallService.openMonsterBall(ballId);
     }
 }
