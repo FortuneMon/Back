@@ -58,11 +58,19 @@ jobs:
     needs: build
 
     steps:
-      # AWS 배포
+      # 🔍 1. 시크릿 키 앞부분 출력 (마스킹된 상태 확인)
       - name: debugging key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" | head -n 5
-          
+
+      # ✅ 2. 실제 SSH로 접속 시도해보기 (성공 여부 확인)
+      - name: Raw SSH 연결 테스트
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 400 key.pem
+          ssh -v -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo ✅ SSH 연결 성공"
+
+      # 🚀 3. (성공 시에만) appleboy로 본격 배포
       - name: SSH to EC2 and deploy
         uses: appleboy/ssh-action@v0.1.4
         with:
