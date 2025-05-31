@@ -3,7 +3,10 @@ package FortuneMonBackEnd.fortuneMon.service;
 import FortuneMonBackEnd.fortuneMon.DTO.FortuneResponse;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface FortuneService {
-    FortuneResponse todayFortune(LocalDate today);
+    List<FortuneResponse> todayFortune(LocalDate today);
+
+    List<FortuneResponse> drawFortune();
 }
