@@ -52,10 +52,20 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
             return null;
         }
         Pokemon pokemon = pokemonRepository.findById(pokemonRate.getPokemonId()).orElse(null);
+
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId).orElse(null);
-        UserPokemon userPokemon = new UserPokemon();
 
+        // 이미 보유하고 있는 포켓몬인 경우 db에 추가하지 않고 바로 정보 리턴
+        List<UserPokemon> userPokemons = userPokemonRepository.findByUserId(userId);
+        for(UserPokemon existPokemon : userPokemons){
+            if(existPokemon.getPokemon().getId().equals(pokemon.getId())){
+                return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(), pokemon.getType(),
+                        pokemon.getGroupName(), true);
+            }
+        }
+
+        UserPokemon userPokemon = new UserPokemon();
         userPokemon.setUser(user);
         userPokemon.setPokemon(pokemon);
         userPokemon.setIsPartner(false);
