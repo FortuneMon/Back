@@ -13,5 +13,5 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class FortuneResponse {
     private LocalDate date;
-    private String advice;
+    private String content;
 }
