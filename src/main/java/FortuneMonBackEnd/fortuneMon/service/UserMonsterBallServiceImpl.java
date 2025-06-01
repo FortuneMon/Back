@@ -28,9 +28,17 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         List<UserBall> userBalls = userMonsterBallRepository.findByUserId(userId);
 
         // 이미 연 몬스터볼은 고려하지 않음
-        userBalls.removeIf(UserBall::isOpen);
-
-        return ballCount(userBalls);
+        //userBalls.removeIf(UserBall::isOpen);
+        List<UserMonsterBallResponseDTO> ballsDTO = userBalls.stream()
+                .map(ball -> new UserMonsterBallResponseDTO(
+                        ball.getMonsterBall().getId(),
+                        ball.getMonsterBall().getUrl(),
+                        ball.getMonsterBall().getCreatedAt(),
+                        ball.isOpen()
+                ))
+                .collect(Collectors.toList());
+        return ballsDTO;
+        //return ballCount(userBalls);
     }
 
     //몬스터볼 오픈 및 포켓몬 도감에 저장
@@ -76,7 +84,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
     }
 
     // 각 몬스터볼의 개수를 세는 함수
-    private List<UserMonsterBallResponseDTO> ballCount(List<UserBall> userBalls){
+    /*private List<UserMonsterBallResponseDTO> ballCount(List<UserBall> userBalls){
         Map<MonsterBall, Long> balls = userBalls.stream()
                 .collect(Collectors.groupingBy(UserBall::getMonsterBall, Collectors.counting()));
 
@@ -86,5 +94,5 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
                         ball.getKey().getUrl(),
                         ball.getValue()))
                 .collect(Collectors.toList());
-    }
+    }*/
 }

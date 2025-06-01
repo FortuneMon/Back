@@ -4,11 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserMonsterBallResponseDTO {
-    private String ballName;
+    private Long ballId;
     private String url;
-    private Long count;
+    private LocalDateTime created_at;
+    private boolean isOpen;
 }
