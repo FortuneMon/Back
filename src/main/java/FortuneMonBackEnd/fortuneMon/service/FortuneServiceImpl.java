@@ -61,7 +61,7 @@ public class FortuneServiceImpl implements FortuneService{
         userMonsterBallRepository.save(userBall); // 뽑은 볼 저장
 
         // 볼 별 운세를 뽑은 후 카테고리별 운세로 나눠서 저장
-        List<Fortune> fortunes = fortuneRepository.findAllByBallId(userBall.getMonsterBall().getId());
+        List<Fortune> fortunes = fortuneRepository.findAllByMonsterBallId(userBall.getMonsterBall().getId());
         List<Fortune> loveFortunes = fortunes.stream()
                 .filter(fortune -> "LOVE".equals(fortune.getCategory()))
                 .toList();

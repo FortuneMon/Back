@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface FortuneRepository extends JpaRepository<Fortune, Long> {
-    List<Fortune> findAllByBallId(Long ballId);
+    List<Fortune> findAllByMonsterBallId(Long ballId);
 }
