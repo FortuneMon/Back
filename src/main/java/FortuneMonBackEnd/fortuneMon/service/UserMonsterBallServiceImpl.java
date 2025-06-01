@@ -33,7 +33,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
                 .map(ball -> new UserMonsterBallResponseDTO(
                         ball.getMonsterBall().getId(),
                         ball.getMonsterBall().getUrl(),
-                        ball.getMonsterBall().getCreatedAt(),
+                        ball.getCreatedAt(),
                         ball.isOpen()
                 ))
                 .collect(Collectors.toList());
