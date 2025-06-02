@@ -31,6 +31,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         //userBalls.removeIf(UserBall::isOpen);
         List<UserMonsterBallResponseDTO> ballsDTO = userBalls.stream()
                 .map(ball -> new UserMonsterBallResponseDTO(
+                        ball.getId(),
                         ball.getMonsterBall().getId(),
                         ball.getMonsterBall().getUrl(),
                         ball.getCreatedAt(),
