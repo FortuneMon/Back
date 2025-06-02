@@ -24,6 +24,7 @@ public class FortuneServiceImpl implements FortuneService{
     private final UserMonsterBallRepository userMonsterBallRepository;
     private final FortuneRepository fortuneRepository;
     private final UserRoutineRepository userRoutineRepository;
+    private final GPTService gptService;
 
     @Override
     public List<FortuneResponse> todayFortune(LocalDate today){
@@ -89,7 +90,7 @@ public class FortuneServiceImpl implements FortuneService{
                 UserFortune userLoveFortune = new UserFortune();
                 userLoveFortune.setFortune(loveFortune);
                 userLoveFortune.setUser(user.get());
-                userLoveFortune.setAdvice("gpt"); // gpt 연동 필요
+                userLoveFortune.setAdvice(gptService.requestGPT(loveFortune.getContent()));
                 userLoveFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userLoveFortune);
                 loveRoutine = true;
@@ -97,7 +98,7 @@ public class FortuneServiceImpl implements FortuneService{
                 UserFortune userHealthFortune = new UserFortune();
                 userHealthFortune.setFortune(healthFortune);
                 userHealthFortune.setUser(user.get());
-                userHealthFortune.setAdvice("gpt"); // gpt 연동 필요
+                userHealthFortune.setAdvice(gptService.requestGPT(healthFortune.getContent()));
                 userHealthFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userHealthFortune);
                 healthRoutine = true;
@@ -105,7 +106,7 @@ public class FortuneServiceImpl implements FortuneService{
                 UserFortune userWealthFortune = new UserFortune();
                 userWealthFortune.setFortune(wealthFortune);
                 userWealthFortune.setUser(user.get());
-                userWealthFortune.setAdvice("gpt"); // gpt 연동 필요
+                userWealthFortune.setAdvice(gptService.requestGPT(wealthFortune.getContent()));
                 userWealthFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userWealthFortune);
                 wealthRoutine = true;
@@ -116,21 +117,21 @@ public class FortuneServiceImpl implements FortuneService{
             UserFortune userLoveFortune = new UserFortune();
             userLoveFortune.setFortune(loveFortune);
             userLoveFortune.setUser(user.get());
-            userLoveFortune.setAdvice("gpt"); // gpt 연동 필요
+            userLoveFortune.setAdvice("루틴을 먼저 설정하세요");
             userLoveFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userLoveFortune);
 
             UserFortune userHealthFortune = new UserFortune();
             userHealthFortune.setFortune(healthFortune);
             userHealthFortune.setUser(user.get());
-            userHealthFortune.setAdvice("gpt"); // gpt 연동 필요
+            userHealthFortune.setAdvice("루틴을 먼저 설정하세요");
             userHealthFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userHealthFortune);
 
             UserFortune userWealthFortune = new UserFortune();
             userWealthFortune.setFortune(wealthFortune);
             userWealthFortune.setUser(user.get());
-            userWealthFortune.setAdvice("gpt"); // gpt 연동 필요
+            userWealthFortune.setAdvice("루틴을 먼저 설정하세요");
             userWealthFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userWealthFortune);
         }
