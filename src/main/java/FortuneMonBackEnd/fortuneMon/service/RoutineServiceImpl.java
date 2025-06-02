@@ -47,7 +47,7 @@ public class RoutineServiceImpl implements RoutineService {
                 .map(routine -> RoutineResponse.builder()
                         .id(routine.getId())
                         .name(routine.getName())
-                        .is_selected(selectedRoutineIds.contains(routine.getId()))
+                        .isSelected(selectedRoutineIds.contains(routine.getId()))
                         .build())
                 .collect(Collectors.toList());
 
