@@ -38,7 +38,7 @@ public class FortuneServiceImpl implements FortuneService{
     }
 
     @Override
-    public List<FortuneResponse> drawFortune() {
+    public List<FortuneResponse> drawFortune(String love, String health, String wealth) {
         Long ball;
         Long userId = SecurityUtil.getCurrentUserId();
         Optional<User> user = userRepository.findById(userId);
@@ -63,13 +63,13 @@ public class FortuneServiceImpl implements FortuneService{
         // 볼 별 운세를 뽑은 후 카테고리별 운세로 나눠서 저장
         List<Fortune> fortunes = fortuneRepository.findAllByMonsterBallId(userBall.getMonsterBall().getId());
         List<Fortune> loveFortunes = fortunes.stream()
-                .filter(fortune -> "LOVE".equals(fortune.getCategory()))
+                .filter(fortune -> love.equals(fortune.getCategory()))
                 .toList();
         List<Fortune> healthFortunes = fortunes.stream()
-                .filter(fortune -> "HEALTH".equals(fortune.getCategory()))
+                .filter(fortune -> health.equals(fortune.getCategory()))
                 .toList();
         List<Fortune> wealthFortunes = fortunes.stream()
-                .filter(fortune -> "WEALTH".equals(fortune.getCategory()))
+                .filter(fortune -> wealth.equals(fortune.getCategory()))
                 .toList();
 
         // 카테고리별 운세 랜덤 뽑기
