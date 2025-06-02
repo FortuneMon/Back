@@ -112,9 +112,14 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
-//    @Operation(summary = "유저의 정보 조회(닉네임, 파트너 포켓몬)", description =
-//            "# 유저의 정보 조회(닉네임, 파트너 포켓몬) API 입니다. 로그인 후 진행하세요. "
-//    )
+    @Operation(summary = "유저의 정보 조회(닉네임, 파트너 포켓몬)", description =
+            "# 유저의 정보 조회(닉네임, 파트너 포켓몬) API 입니다. 로그인 후 진행하세요. "
+    )
+    @GetMapping("/info")
+    public ApiResponse<?> getMyInfo() {
+        UserResponseDTO.UsersInfoDTO response = userService.getMyInfo();
+        return ApiResponse.onSuccess(response);
+    }
 
 
 }

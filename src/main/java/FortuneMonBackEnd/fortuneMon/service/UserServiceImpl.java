@@ -4,15 +4,9 @@ import FortuneMonBackEnd.fortuneMon.DTO.*;
 import FortuneMonBackEnd.fortuneMon.apiPayload.code.status.ErrorStatus;
 import FortuneMonBackEnd.fortuneMon.apiPayload.exception.GeneralException;
 import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
-import FortuneMonBackEnd.fortuneMon.domain.Routine;
-import FortuneMonBackEnd.fortuneMon.domain.RoutineLog;
-import FortuneMonBackEnd.fortuneMon.domain.User;
-import FortuneMonBackEnd.fortuneMon.domain.UserRoutine;
+import FortuneMonBackEnd.fortuneMon.domain.*;
 import FortuneMonBackEnd.fortuneMon.jwt.JwtUtil;
-import FortuneMonBackEnd.fortuneMon.repository.RoutineLogRepository;
-import FortuneMonBackEnd.fortuneMon.repository.RoutineRepository;
-import FortuneMonBackEnd.fortuneMon.repository.UserRepository;
-import FortuneMonBackEnd.fortuneMon.repository.UserRoutineRepository;
+import FortuneMonBackEnd.fortuneMon.repository.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserRoutineRepository userRoutineRepository;
     private final RoutineRepository routineRepository;
     private final RoutineLogRepository routineLogRepository;
+    private final UserPokemonRepository userPokemonRepository;
 
     @Override
     public UserResponseDTO.SignUpResponseDTO signUp(UserRequestDTO.SignUpRequestDTO request) {
@@ -269,6 +264,26 @@ public class UserServiceImpl implements UserService {
         return UserResponseDTO.UsersDuplicateCheckDTO.builder()
                 .is_confirmed(!exists)
                 .message(exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.")
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO.UsersInfoDTO getMyInfo() {
+        Long userId = SecurityUtil.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        UserPokemon partner = userPokemonRepository.findByUserIdAndIsPartnerTrue(userId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTNER_POKEMON_NOT_FOUND));
+
+        Pokemon pokemon = partner.getPokemon();
+
+        return UserResponseDTO.UsersInfoDTO.builder()
+                .nickName(user.getNickname())
+                .pokemonId(pokemon.getId())
+                .pokemonName(pokemon.getName())
+                .url(pokemon.getUrl())
                 .build();
     }
 }

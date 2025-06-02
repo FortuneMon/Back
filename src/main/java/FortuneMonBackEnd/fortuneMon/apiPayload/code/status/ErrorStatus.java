@@ -26,6 +26,7 @@ public enum ErrorStatus implements BaseErrorCode {
     ID_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER_1007", "ID가 일치하지 않습니다."),
     SAME_PASSWORD(HttpStatus.BAD_REQUEST, "USER_1008", "이전 비밀번호와 동일합니다."),
     PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER_1009", "패스워드가 일치하지 않습니다."),
+    PARTNER_POKEMON_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_1010", "파트너 포켓몬이 존재하지 않습니다."),
 
     // 토큰 관련 응답 2000
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN_2001", "클라이언트의 토큰이 없거나, 유효하지 않습니다."),

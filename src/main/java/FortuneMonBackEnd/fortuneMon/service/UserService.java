@@ -25,4 +25,6 @@ public interface UserService {
     UserResponseDTO.UsersDuplicateCheckDTO isLoginIdDuplicate(String loginId);
 
     UserResponseDTO.UsersDuplicateCheckDTO isNicknameDuplicate(String nickname);
+
+    UserResponseDTO.UsersInfoDTO getMyInfo();
 }
