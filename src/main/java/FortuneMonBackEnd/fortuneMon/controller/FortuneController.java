@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -28,10 +29,14 @@ public class FortuneController {
     }
 
     @Operation(summary = "오늘의 운세 뽑기", description =
-            "# 오늘의 운세 뽑기 API입니다. 로그인 후 진행하세요.")
+            "# 오늘의 운세 뽑기 API입니다. 애정, 건강, 재물 카테고리를 입력해주세요")
     @PostMapping("/fortunes")
-    public ApiResponse<?> drawFortune(){
-        List<FortuneResponse> response = fortuneService.drawFortune();
+    public ApiResponse<?> drawFortune(@RequestParam String love,
+                                      @RequestParam String health,
+                                      @RequestParam String wealth)
+    {
+
+        List<FortuneResponse> response = fortuneService.drawFortune(love, health, wealth);
 
         return ApiResponse.onSuccess(response);
     }
