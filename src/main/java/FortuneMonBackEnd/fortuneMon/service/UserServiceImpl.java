@@ -235,6 +235,7 @@ public class UserServiceImpl implements UserService {
 
         List<RoutineStatisticsResponse.statisticsResponse> statistics = userRoutines.stream()
                 .map(ur -> RoutineStatisticsResponse.statisticsResponse.builder()
+                        .routineId(ur.getRoutine().getId())
                         .routineName(ur.getRoutine().getName())
                         .daysStatistics(routineLogMap.getOrDefault(ur.getId(), new HashMap<>()))
                         .build())

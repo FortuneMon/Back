@@ -23,6 +23,7 @@ public class RoutineStatisticsResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class statisticsResponse {
+        private Long routineId;
         private String routineName;
         private Map<LocalDate, Boolean> daysStatistics;
     }
