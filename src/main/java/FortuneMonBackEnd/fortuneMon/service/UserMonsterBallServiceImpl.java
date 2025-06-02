@@ -61,8 +61,10 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
             return null;
         }
         Pokemon pokemon = pokemonRepository.findById(pokemonRate.getPokemonId()).orElse(null);
-        openBall.setOpen(true); // 볼 사용 표시
-
+        if(pokemon!=null) {
+            openBall.setOpen(true); // 볼 사용 표시
+            userMonsterBallRepository.save(openBall);
+        }
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId).orElse(null);
 
