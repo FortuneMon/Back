@@ -251,4 +251,24 @@ public class UserServiceImpl implements UserService {
                 .build();
 
     }
+
+    @Override
+    public UserResponseDTO.UsersDuplicateCheckDTO isLoginIdDuplicate(String loginId) {
+        boolean exists = userRepository.existsByLoginId(loginId);
+
+        return UserResponseDTO.UsersDuplicateCheckDTO.builder()
+                .is_confirmed(!exists)
+                .message(exists ? "이미 사용 중인 로그인 ID입니다." : "사용 가능한 로그인 ID입니다.")
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO.UsersDuplicateCheckDTO isNicknameDuplicate(String nickname) {
+        boolean exists = userRepository.existsByNickname(nickname);
+
+        return UserResponseDTO.UsersDuplicateCheckDTO.builder()
+                .is_confirmed(!exists)
+                .message(exists ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.")
+                .build();
+    }
 }
