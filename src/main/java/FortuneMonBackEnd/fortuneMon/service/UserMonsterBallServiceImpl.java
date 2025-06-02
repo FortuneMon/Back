@@ -47,7 +47,8 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         double rand = Math.random();
         double cumulative = 0.0;
         PokemonBallRate pokemonRate = null;
-        List<PokemonBallRate> rates = pokemonBallRateRepository.findAllByBallId(ballId);
+        UserBall openBall = userMonsterBallRepository.findById(ballId).orElse(null);
+        List<PokemonBallRate> rates = pokemonBallRateRepository.findAllByBallId(openBall.getMonsterBall().getId());
 
         for(PokemonBallRate rate : rates){
             cumulative += rate.getProbability();
@@ -60,6 +61,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
             return null;
         }
         Pokemon pokemon = pokemonRepository.findById(pokemonRate.getPokemonId()).orElse(null);
+        openBall.setOpen(true); // 볼 사용 표시
 
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId).orElse(null);
