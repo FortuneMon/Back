@@ -276,15 +276,15 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
         UserPokemon partner = userPokemonRepository.findByUserIdAndIsPartnerTrue(userId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTNER_POKEMON_NOT_FOUND));
+                .orElse(null);
 
-        Pokemon pokemon = partner.getPokemon();
+        Pokemon pokemon = (partner != null) ? partner.getPokemon() : null;
 
         return UserResponseDTO.UsersInfoDTO.builder()
                 .nickName(user.getNickname())
-                .pokemonId(pokemon.getId())
-                .pokemonName(pokemon.getName())
-                .url(pokemon.getUrl())
+                .pokemonId(pokemon != null ? pokemon.getId() : null)
+                .pokemonName(pokemon != null ? pokemon.getName() : null)
+                .url(pokemon != null ? pokemon.getUrl() : null)
                 .build();
     }
 }
