@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -27,11 +28,11 @@ public class FortuneServiceImpl implements FortuneService{
     public List<FortuneResponse> todayFortune(LocalDate today){
         Long userId = SecurityUtil.getCurrentUserId();
         List<UserFortune> userFortunes = userFortuneRepository.findAllByUserId(userId);
-        List<FortuneResponse> fortuneResponses = null;
+        List<FortuneResponse> fortuneResponses = new ArrayList<>();
 
         for(UserFortune userFortune : userFortunes){
             if(userFortune.getDate().equals(today)){
-                fortuneResponses.add(new FortuneResponse(userFortune.getDate(), fortuneRepository.findById(userFortune.getFortune().getId()).get().getContent()));
+                fortuneResponses.add(new FortuneResponse(userFortune.getDate(), userFortune.getFortune().getCategory(), fortuneRepository.findById(userFortune.getFortune().getId()).get().getContent()));
             }
         }
         return fortuneResponses;
@@ -100,10 +101,10 @@ public class FortuneServiceImpl implements FortuneService{
         userWealthFortune.setDate(LocalDate.now());
         userFortuneRepository.save(userWealthFortune);
 
-        List<FortuneResponse> fortuneResponses = null;
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getContent()));
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getContent()));
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getContent()));
+        List<FortuneResponse> fortuneResponses = new ArrayList<>();
+        fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
+        fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
+        fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
 
         return fortuneResponses;
     }
