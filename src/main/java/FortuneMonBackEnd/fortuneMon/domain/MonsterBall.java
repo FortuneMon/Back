@@ -25,7 +25,7 @@ public class MonsterBall extends BaseEntity {
     @OneToMany(mappedBy = "monsterBall")
     private List<UserBall> userBall;
 
-    @OneToOne(mappedBy = "monsterBall")
-    private Fortune fortune;
+    @OneToMany(mappedBy = "monsterBall")
+    private List<Fortune> fortune;
 }
 
