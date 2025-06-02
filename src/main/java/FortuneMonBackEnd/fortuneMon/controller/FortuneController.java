@@ -1,14 +1,12 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
+import FortuneMonBackEnd.fortuneMon.DTO.CategoryRequest;
 import FortuneMonBackEnd.fortuneMon.DTO.FortuneResponse;
 import FortuneMonBackEnd.fortuneMon.apiPayload.ApiResponse;
 import FortuneMonBackEnd.fortuneMon.service.FortuneService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,12 +29,12 @@ public class FortuneController {
     @Operation(summary = "오늘의 운세 뽑기", description =
             "# 오늘의 운세 뽑기 API입니다. 애정, 건강, 재물 카테고리를 입력해주세요")
     @PostMapping("/fortunes")
-    public ApiResponse<?> drawFortune(@RequestParam String love,
-                                      @RequestParam String health,
-                                      @RequestParam String wealth)
+    public ApiResponse<?> drawFortune(@RequestBody CategoryRequest categoryRequest)
     {
 
-        List<FortuneResponse> response = fortuneService.drawFortune(love, health, wealth);
+        List<FortuneResponse> response = fortuneService.drawFortune(categoryRequest.getLove(),
+                categoryRequest.getHealth(),
+                categoryRequest.getWealth());
 
         return ApiResponse.onSuccess(response);
     }
