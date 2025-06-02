@@ -50,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // 프론트엔드 주소
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000")); // 프론트엔드 주소
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // 인증 정보 포함 요청 허용 (ex. 쿠키)
