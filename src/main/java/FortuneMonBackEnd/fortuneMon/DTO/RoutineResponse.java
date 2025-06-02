@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class RoutineResponse {
     private Long id;
     private String name;
-
+    private boolean isSelected;
 
 }
