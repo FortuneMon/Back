@@ -45,4 +45,27 @@ public class UserResponseDTO {
         private String message;
 
     }
+
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    @Getter
+    @Builder
+    public static class UsersDuplicateCheckDTO {
+        private boolean is_confirmed;
+        private String message;
+    }
+
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    @Getter
+    @Builder
+    public static class UsersInfoDTO {
+        private String nickName;
+
+        private Long pokemonId;
+        private String pokemonName;
+        private String url;
+    }
+
+
 }

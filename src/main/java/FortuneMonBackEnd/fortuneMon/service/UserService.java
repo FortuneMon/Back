@@ -21,4 +21,10 @@ public interface UserService {
     RoutineLogResponse setMyRoutineStatus(Long routineId);
 
     RoutineStatisticsResponse getMyRoutinesStatistics(LocalDate date);
+
+    UserResponseDTO.UsersDuplicateCheckDTO isLoginIdDuplicate(String loginId);
+
+    UserResponseDTO.UsersDuplicateCheckDTO isNicknameDuplicate(String nickname);
+
+    UserResponseDTO.UsersInfoDTO getMyInfo();
 }

@@ -93,5 +93,33 @@ public class UserController {
         return ApiResponse.onSuccess(response);
     }
 
+    @Operation(summary = "유저 로그인 id 중복 체크", description =
+            "# 유저 로그인 id 중복 체크 API 입니다. "
+    )
+    @GetMapping("/check-login-id")
+    public ApiResponse<?> checkLoginIdDuplicate(@RequestParam String loginId) {
+        UserResponseDTO.UsersDuplicateCheckDTO response = userService.isLoginIdDuplicate(loginId);
+        return ApiResponse.onSuccess(response);
+    }
+
+
+    @Operation(summary = "유저 닉네임 중복 체크", description =
+            "# 유저 닉네임 중복 체크 API 입니다."
+    )
+    @GetMapping("/check-nickname")
+    public ApiResponse<?> checkNicknameDuplicate(@RequestParam String nickname) {
+        UserResponseDTO.UsersDuplicateCheckDTO response = userService.isNicknameDuplicate(nickname);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @Operation(summary = "유저의 정보 조회(닉네임, 파트너 포켓몬)", description =
+            "# 유저의 정보 조회(닉네임, 파트너 포켓몬) API 입니다. 로그인 후 진행하세요. "
+    )
+    @GetMapping("/info")
+    public ApiResponse<?> getMyInfo() {
+        UserResponseDTO.UsersInfoDTO response = userService.getMyInfo();
+        return ApiResponse.onSuccess(response);
+    }
+
 
 }
