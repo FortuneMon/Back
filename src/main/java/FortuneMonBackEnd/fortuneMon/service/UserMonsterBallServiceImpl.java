@@ -31,6 +31,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         //userBalls.removeIf(UserBall::isOpen);
         List<UserMonsterBallResponseDTO> ballsDTO = userBalls.stream()
                 .map(ball -> new UserMonsterBallResponseDTO(
+                        ball.getId(),
                         ball.getMonsterBall().getId(),
                         ball.getMonsterBall().getUrl(),
                         ball.getCreatedAt(),
@@ -61,8 +62,10 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
             return null;
         }
         Pokemon pokemon = pokemonRepository.findById(pokemonRate.getPokemonId()).orElse(null);
-        openBall.setOpen(true); // 볼 사용 표시
-
+        if(pokemon!=null) {
+            openBall.setOpen(true); // 볼 사용 표시
+            userMonsterBallRepository.save(openBall);
+        }
         Long userId = SecurityUtil.getCurrentUserId();
         User user = userRepository.findById(userId).orElse(null);
 

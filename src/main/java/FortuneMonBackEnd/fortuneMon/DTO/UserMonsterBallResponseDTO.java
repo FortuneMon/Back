@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserMonsterBallResponseDTO {
+    private Long id;
     private Long ballId;
     private String url;
     private LocalDateTime created_at;
