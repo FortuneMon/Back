@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRoutineInfoResponseDTO {
+        private Long routineId;
         private String name;
         private Boolean isCompleted;
         private LocalDateTime createdAt;

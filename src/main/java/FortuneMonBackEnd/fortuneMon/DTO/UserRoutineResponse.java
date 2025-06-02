@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRoutineResponse {
+    private Long routineId;
     private String nickname;
     private List<UserRoutineInfoResponseDTO> routines;
 }

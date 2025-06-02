@@ -18,6 +18,7 @@ import java.util.Optional;
 public interface UserRoutineRepository extends JpaRepository<UserRoutine, Long> {
 
     @Query("SELECT new FortuneMonBackEnd.fortuneMon.DTO.UserRoutineInfoResponseDTO( " +
+            "r.id, " +
             "r.name, " +
             "COALESCE(rl.isCompleted, false), " +
             "ur.createdAt) " +
