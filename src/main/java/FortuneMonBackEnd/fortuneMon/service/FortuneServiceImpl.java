@@ -23,6 +23,7 @@ public class FortuneServiceImpl implements FortuneService{
     private final MonsterBallRepository monsterBallRepository;
     private final UserMonsterBallRepository userMonsterBallRepository;
     private final FortuneRepository fortuneRepository;
+    private final UserRoutineRepository userRoutineRepository;
 
     @Override
     public List<FortuneResponse> todayFortune(LocalDate today){
@@ -44,7 +45,10 @@ public class FortuneServiceImpl implements FortuneService{
         Long userId = SecurityUtil.getCurrentUserId();
         Optional<User> user = userRepository.findById(userId);
         Optional<MonsterBall> monsterBall;
+        List<UserRoutine> userRoutines = userRoutineRepository.findAllByUserId(userId);
+        boolean loveRoutine = false, healthRoutine = false, wealthRoutine = false;
         double rand = Math.random();
+
         if(rand < 0.1){
             monsterBall = monsterBallRepository.findById(1L); // 몬스터볼
         } else if (rand < 0.5) {
@@ -79,33 +83,74 @@ public class FortuneServiceImpl implements FortuneService{
         Fortune healthFortune = healthFortunes.get(random.nextInt(healthFortunes.size()));
         Fortune wealthFortune = wealthFortunes.get(random.nextInt(wealthFortunes.size()));
 
-        // 카테고리별 운세 유저 운세에 저장
-        UserFortune userLoveFortune = new UserFortune();
-        userLoveFortune.setFortune(loveFortune);
-        userLoveFortune.setUser(user.get());
-        userLoveFortune.setAdvice("gpt"); // gpt 연동 필요
-        userLoveFortune.setDate(LocalDate.now());
-        userFortuneRepository.save(userLoveFortune);
+        // 유저 루틴의 카테고리별 운세 저장
+        for(UserRoutine userRoutine : userRoutines){
+            if(userRoutine.getRoutine().getCategory().equals(love) && !loveRoutine){
+                UserFortune userLoveFortune = new UserFortune();
+                userLoveFortune.setFortune(loveFortune);
+                userLoveFortune.setUser(user.get());
+                userLoveFortune.setAdvice("gpt"); // gpt 연동 필요
+                userLoveFortune.setDate(LocalDate.now());
+                userFortuneRepository.save(userLoveFortune);
+                loveRoutine = true;
+            } else if (userRoutine.getRoutine().getCategory().equals(health) && !healthRoutine) {
+                UserFortune userHealthFortune = new UserFortune();
+                userHealthFortune.setFortune(healthFortune);
+                userHealthFortune.setUser(user.get());
+                userHealthFortune.setAdvice("gpt"); // gpt 연동 필요
+                userHealthFortune.setDate(LocalDate.now());
+                userFortuneRepository.save(userHealthFortune);
+                healthRoutine = true;
+            } else if (userRoutine.getRoutine().getCategory().equals(wealth) && !wealthRoutine) {
+                UserFortune userWealthFortune = new UserFortune();
+                userWealthFortune.setFortune(wealthFortune);
+                userWealthFortune.setUser(user.get());
+                userWealthFortune.setAdvice("gpt"); // gpt 연동 필요
+                userWealthFortune.setDate(LocalDate.now());
+                userFortuneRepository.save(userWealthFortune);
+                wealthRoutine = true;
+            }
+        }
+        // 루틴이 없는 경우 모든 카테고리별 운세 유저 운세에 저장
+        if(!loveRoutine && !healthRoutine && !wealthRoutine) {
+            UserFortune userLoveFortune = new UserFortune();
+            userLoveFortune.setFortune(loveFortune);
+            userLoveFortune.setUser(user.get());
+            userLoveFortune.setAdvice("gpt"); // gpt 연동 필요
+            userLoveFortune.setDate(LocalDate.now());
+            userFortuneRepository.save(userLoveFortune);
 
-        UserFortune userHealthFortune = new UserFortune();
-        userHealthFortune.setFortune(healthFortune);
-        userHealthFortune.setUser(user.get());
-        userHealthFortune.setAdvice("gpt"); // gpt 연동 필요
-        userHealthFortune.setDate(LocalDate.now());
-        userFortuneRepository.save(userHealthFortune);
+            UserFortune userHealthFortune = new UserFortune();
+            userHealthFortune.setFortune(healthFortune);
+            userHealthFortune.setUser(user.get());
+            userHealthFortune.setAdvice("gpt"); // gpt 연동 필요
+            userHealthFortune.setDate(LocalDate.now());
+            userFortuneRepository.save(userHealthFortune);
 
-        UserFortune userWealthFortune = new UserFortune();
-        userWealthFortune.setFortune(wealthFortune);
-        userWealthFortune.setUser(user.get());
-        userWealthFortune.setAdvice("gpt"); // gpt 연동 필요
-        userWealthFortune.setDate(LocalDate.now());
-        userFortuneRepository.save(userWealthFortune);
+            UserFortune userWealthFortune = new UserFortune();
+            userWealthFortune.setFortune(wealthFortune);
+            userWealthFortune.setUser(user.get());
+            userWealthFortune.setAdvice("gpt"); // gpt 연동 필요
+            userWealthFortune.setDate(LocalDate.now());
+            userFortuneRepository.save(userWealthFortune);
+        }
 
         List<FortuneResponse> fortuneResponses = new ArrayList<>();
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
-        fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
+        if(loveRoutine) {
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
+        }
+        if(healthRoutine) {
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
+        }
+        if(wealthRoutine) {
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
+        }
+        if(!loveRoutine && !healthRoutine && !wealthRoutine){
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
 
+        }
         return fortuneResponses;
     }
 }

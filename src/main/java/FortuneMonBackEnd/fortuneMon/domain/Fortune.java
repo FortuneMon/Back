@@ -15,8 +15,8 @@ public class Fortune extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "ball_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "ball_id")
     private MonsterBall monsterBall;
 
     @Column(nullable = false, length = 20)
