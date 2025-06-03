@@ -1,29 +1,20 @@
 package FortuneMonBackEnd.fortuneMon.DTO;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // 나의 포켓몬 목록을 조회할 때 소유 여부 컬럼을 추가하여 반환하기 위한 형식
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPokemonDTO {
     private Long id;
     private String name;
     private String url;
-    private String type;
+    private List<String> type;
     private String groupName;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
     boolean isOwned; // 유저가 가지고 있는지 여부를 저장하기 위한 변수
-
-    public UserPokemonDTO(Long id, String name, String url, String type, String groupName, boolean isOwned){
-        this.id=id;
-        this.name=name;
-        this.url=url;
-        this.type=type;
-        this.groupName=groupName;
-        this.isOwned=isOwned;
-    }
 }

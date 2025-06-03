@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,7 +39,9 @@ public class UserPokemonServiceImpl implements UserPokemonService {
                 pokemon.getId(),
                 pokemon.getName(),
                 pokemon.getUrl(),
-                pokemon.getType(),
+                Arrays.stream(pokemon.getType().split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toList()),
                 pokemon.getGroupName(),
                 userOwnedPokemon.contains(pokemon.getId())
         )).collect(Collectors.toList());
@@ -53,7 +56,9 @@ public class UserPokemonServiceImpl implements UserPokemonService {
             if(userPokemon.getId().equals(pokemonId)){
                 userPokemon.setIsPartner(true);
                 userPokemonDTO = new UserPokemonDTO(userPokemon.getId(), userPokemon.getPokemon().getName(),
-                        userPokemon.getPokemon().getUrl(), userPokemon.getPokemon().getType(),
+                        userPokemon.getPokemon().getUrl(), Arrays.stream(userPokemon.getPokemon().getType().split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toList()),
                         userPokemon.getPokemon().getGroupName(), true);
                 userPokemonRepository.save(userPokemon);
             }
