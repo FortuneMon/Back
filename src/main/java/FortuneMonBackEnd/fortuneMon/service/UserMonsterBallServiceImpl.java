@@ -8,6 +8,7 @@ import FortuneMonBackEnd.fortuneMon.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -73,7 +74,10 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         List<UserPokemon> userPokemons = userPokemonRepository.findByUserId(userId);
         for(UserPokemon existPokemon : userPokemons){
             if(existPokemon.getPokemon().getId().equals(pokemon.getId())){
-                return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(), pokemon.getType(),
+                return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(),
+                        Arrays.stream(pokemon.getType().split(";"))
+                                .map(String::trim)
+                                .collect(Collectors.toList()),
                         pokemon.getGroupName(), true);
             }
         }
@@ -84,7 +88,10 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
         userPokemon.setIsPartner(false);
         userPokemonRepository.save(userPokemon); // 도감(유저가 가진 포켓몬) 저장
 
-        return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(), pokemon.getType(),
+        return new UserPokemonDTO(pokemon.getId(), pokemon.getName(), pokemon.getUrl(),
+                Arrays.stream(pokemon.getType().split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toList()),
                 pokemon.getGroupName(), true);
     }
 
