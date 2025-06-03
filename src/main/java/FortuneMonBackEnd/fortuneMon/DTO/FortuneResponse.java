@@ -15,4 +15,5 @@ public class FortuneResponse {
     private LocalDate date;
     private String category;
     private String content;
+    private String advice;
 }

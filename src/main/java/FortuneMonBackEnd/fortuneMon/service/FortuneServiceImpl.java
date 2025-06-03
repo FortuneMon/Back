@@ -34,7 +34,7 @@ public class FortuneServiceImpl implements FortuneService{
 
         for(UserFortune userFortune : userFortunes){
             if(userFortune.getDate().equals(today)){
-                fortuneResponses.add(new FortuneResponse(userFortune.getDate(), userFortune.getFortune().getCategory(), fortuneRepository.findById(userFortune.getFortune().getId()).get().getContent()));
+                fortuneResponses.add(new FortuneResponse(userFortune.getDate(), userFortune.getFortune().getCategory(), fortuneRepository.findById(userFortune.getFortune().getId()).get().getContent(), userFortune.getAdvice()));
             }
         }
         return fortuneResponses;
@@ -84,29 +84,29 @@ public class FortuneServiceImpl implements FortuneService{
         Fortune healthFortune = healthFortunes.get(random.nextInt(healthFortunes.size()));
         Fortune wealthFortune = wealthFortunes.get(random.nextInt(wealthFortunes.size()));
 
+        UserFortune userLoveFortune = new UserFortune();
+        UserFortune userHealthFortune = new UserFortune();
+        UserFortune userWealthFortune = new UserFortune();
         // 유저 루틴의 카테고리별 운세 저장
         for(UserRoutine userRoutine : userRoutines){
             if(userRoutine.getRoutine().getCategory().equals(love) && !loveRoutine){
-                UserFortune userLoveFortune = new UserFortune();
                 userLoveFortune.setFortune(loveFortune);
                 userLoveFortune.setUser(user.get());
-                userLoveFortune.setAdvice(gptService.requestGPT(loveFortune.getContent()));
+                userLoveFortune.setAdvice(gptService.requestGPT(loveFortune.getContent(), "love"));
                 userLoveFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userLoveFortune);
                 loveRoutine = true;
             } else if (userRoutine.getRoutine().getCategory().equals(health) && !healthRoutine) {
-                UserFortune userHealthFortune = new UserFortune();
                 userHealthFortune.setFortune(healthFortune);
                 userHealthFortune.setUser(user.get());
-                userHealthFortune.setAdvice(gptService.requestGPT(healthFortune.getContent()));
+                userHealthFortune.setAdvice(gptService.requestGPT(healthFortune.getContent(), "health"));
                 userHealthFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userHealthFortune);
                 healthRoutine = true;
             } else if (userRoutine.getRoutine().getCategory().equals(wealth) && !wealthRoutine) {
-                UserFortune userWealthFortune = new UserFortune();
                 userWealthFortune.setFortune(wealthFortune);
                 userWealthFortune.setUser(user.get());
-                userWealthFortune.setAdvice(gptService.requestGPT(wealthFortune.getContent()));
+                userWealthFortune.setAdvice(gptService.requestGPT(wealthFortune.getContent(), "health"));
                 userWealthFortune.setDate(LocalDate.now());
                 userFortuneRepository.save(userWealthFortune);
                 wealthRoutine = true;
@@ -114,21 +114,18 @@ public class FortuneServiceImpl implements FortuneService{
         }
         // 루틴이 없는 경우 모든 카테고리별 운세 유저 운세에 저장
         if(!loveRoutine && !healthRoutine && !wealthRoutine) {
-            UserFortune userLoveFortune = new UserFortune();
             userLoveFortune.setFortune(loveFortune);
             userLoveFortune.setUser(user.get());
             userLoveFortune.setAdvice("루틴을 먼저 설정하세요");
             userLoveFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userLoveFortune);
 
-            UserFortune userHealthFortune = new UserFortune();
             userHealthFortune.setFortune(healthFortune);
             userHealthFortune.setUser(user.get());
             userHealthFortune.setAdvice("루틴을 먼저 설정하세요");
             userHealthFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userHealthFortune);
 
-            UserFortune userWealthFortune = new UserFortune();
             userWealthFortune.setFortune(wealthFortune);
             userWealthFortune.setUser(user.get());
             userWealthFortune.setAdvice("루틴을 먼저 설정하세요");
@@ -138,18 +135,18 @@ public class FortuneServiceImpl implements FortuneService{
 
         List<FortuneResponse> fortuneResponses = new ArrayList<>();
         if(loveRoutine) {
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent(), userLoveFortune.getAdvice()));
         }
         if(healthRoutine) {
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent(), userHealthFortune.getAdvice()));
         }
         if(wealthRoutine) {
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent(), userWealthFortune.getAdvice()));
         }
         if(!loveRoutine && !healthRoutine && !wealthRoutine){
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent()));
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent()));
-            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), loveFortune.getCategory(), loveFortune.getContent(), userLoveFortune.getAdvice()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), healthFortune.getCategory(), healthFortune.getContent(), userHealthFortune.getAdvice()));
+            fortuneResponses.add(new FortuneResponse(LocalDate.now(), wealthFortune.getCategory(), wealthFortune.getContent(), userWealthFortune.getAdvice()));
 
         }
         return fortuneResponses;
