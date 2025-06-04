@@ -17,4 +17,5 @@ public class UserPokemonDTO {
     private List<String> type;
     private String groupName;
     boolean isOwned; // 유저가 가지고 있는지 여부를 저장하기 위한 변수
+    boolean isParnter;
 }

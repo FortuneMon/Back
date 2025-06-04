@@ -43,7 +43,8 @@ public class UserPokemonServiceImpl implements UserPokemonService {
                                 .map(String::trim)
                                 .collect(Collectors.toList()),
                 pokemon.getGroupName(),
-                userOwnedPokemon.contains(pokemon.getId())
+                userOwnedPokemon.contains(pokemon.getId()),
+                isPartner(pokemon.getId())
         )).collect(Collectors.toList());
     }
 
@@ -59,7 +60,7 @@ public class UserPokemonServiceImpl implements UserPokemonService {
                         userPokemon.getPokemon().getUrl(), Arrays.stream(userPokemon.getPokemon().getType().split(","))
                         .map(String::trim)
                         .collect(Collectors.toList()),
-                        userPokemon.getPokemon().getGroupName(), true);
+                        userPokemon.getPokemon().getGroupName(), true, userPokemon.getIsPartner());
                 userPokemonRepository.save(userPokemon);
             }
             else if(userPokemon.getIsPartner()){
@@ -68,5 +69,21 @@ public class UserPokemonServiceImpl implements UserPokemonService {
             }
         }
         return userPokemonDTO;
+    }
+
+    private boolean isPartner(Long pokemonId){
+        Long userId = SecurityUtil.getCurrentUserId();
+        List<UserPokemon> userPokemons = userPokemonRepository.findByUserId(userId);
+        for(UserPokemon userPokemon : userPokemons){
+            if(userPokemon.getPokemon().getId().equals(pokemonId)){
+                if(userPokemon.getIsPartner()){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }
