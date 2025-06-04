@@ -27,14 +27,12 @@ public class FortuneController {
     }
 
     @Operation(summary = "오늘의 운세 뽑기", description =
-            "# 오늘의 운세 뽑기 API입니다. 애정, 건강, 재물 카테고리를 입력해주세요")
+            "# 오늘의 운세 뽑기 API입니다.")
     @PostMapping("/fortunes")
-    public ApiResponse<?> drawFortune(@RequestBody CategoryRequest categoryRequest)
+    public ApiResponse<?> drawFortune()
     {
 
-        List<FortuneResponse> response = fortuneService.drawFortune(categoryRequest.getLove(),
-                categoryRequest.getHealth(),
-                categoryRequest.getWealth());
+        List<FortuneResponse> response = fortuneService.drawFortune();
 
         return ApiResponse.onSuccess(response);
     }

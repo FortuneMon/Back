@@ -8,5 +8,5 @@ import java.util.List;
 public interface FortuneService {
     List<FortuneResponse> todayFortune(LocalDate today);
 
-    List<FortuneResponse> drawFortune(String love, String health, String wealth);
+    List<FortuneResponse> drawFortune();
 }
