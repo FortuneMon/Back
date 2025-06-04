@@ -78,7 +78,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
                         Arrays.stream(pokemon.getType().split(";"))
                                 .map(String::trim)
                                 .collect(Collectors.toList()),
-                        pokemon.getGroupName(), true);
+                        pokemon.getGroupName(), true, existPokemon.getIsPartner());
             }
         }
 
@@ -92,7 +92,7 @@ public class UserMonsterBallServiceImpl implements UserMonsterBallService{
                 Arrays.stream(pokemon.getType().split(","))
                         .map(String::trim)
                         .collect(Collectors.toList()),
-                pokemon.getGroupName(), true);
+                pokemon.getGroupName(), true, userPokemon.getIsPartner());
     }
 
     // 각 몬스터볼의 개수를 세는 함수
