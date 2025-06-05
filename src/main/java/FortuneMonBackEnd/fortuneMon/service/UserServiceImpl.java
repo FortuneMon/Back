@@ -195,8 +195,17 @@ public class UserServiceImpl implements UserService {
         UserRoutine userRoutine = userRoutineRepository.findByUserIdAndRoutineId(userId, routineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.ROUTINE_NOT_FOUND));
 
-        RoutineLog routineLog = routineLogRepository.findByUserRoutineIdAndDate(userRoutine.getId(), LocalDate.now())
-                .orElseThrow(()-> new GeneralException(ErrorStatus.ROUTINE_LOG_NOT_FOUND));
+        LocalDate today = LocalDate.now();
+        RoutineLog routineLog = routineLogRepository.findByUserRoutineIdAndDate(userRoutine.getId(), today)
+                .orElseGet(() -> {
+                    // RoutineLog가 없으면 새로 생성
+                    RoutineLog newLog = RoutineLog.builder()
+                            .userRoutine(userRoutine)
+                            .date(today)
+                            .isCompleted(false) // 기본값: false
+                            .build();
+                    return routineLogRepository.save(newLog);
+                });
 
         routineLog.setIsCompleted(!routineLog.getIsCompleted());
         routineLogRepository.save(routineLog);
