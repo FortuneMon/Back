@@ -68,6 +68,9 @@ public class UserPokemonServiceImpl implements UserPokemonService {
                 userPokemonRepository.save(userPokemon);
             }
         }
+        if(userPokemonDTO==null){
+            throw new IllegalArgumentException("보유하고 있지 않은 포켓몬입니다");
+        }
         return userPokemonDTO;
     }
 
