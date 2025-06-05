@@ -1,6 +1,7 @@
 package FortuneMonBackEnd.fortuneMon.controller;
 
 import FortuneMonBackEnd.fortuneMon.DTO.UserPokemonDTO;
+import FortuneMonBackEnd.fortuneMon.apiPayload.ApiResponse;
 import FortuneMonBackEnd.fortuneMon.config.security.SecurityUtil;
 import FortuneMonBackEnd.fortuneMon.service.UserPokemonServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,8 +29,9 @@ public class UserPokemonController {
     @Operation(summary = "파트너 포켓몬 설정", description =
             "# 파트너 포켓몬 설정 API입니다. 로그인 후 진행하세요.")
     @PatchMapping("/partners/{id}")
-    public UserPokemonDTO setPartnerPokemon(@PathVariable("id") Long pokemonId){
-        return userPokemonService.setPartnerPokemon(pokemonId);
+    public ApiResponse<?> setPartnerPokemon(@PathVariable("id") Long pokemonId){
+        UserPokemonDTO response = userPokemonService.setPartnerPokemon(pokemonId);
+        return ApiResponse.onSuccess(response);
     }
 
 }
