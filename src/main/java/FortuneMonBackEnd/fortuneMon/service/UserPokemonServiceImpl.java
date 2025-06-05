@@ -54,9 +54,9 @@ public class UserPokemonServiceImpl implements UserPokemonService {
         List<UserPokemon> userPokemons = userPokemonRepository.findByUserId(userId);
         UserPokemonDTO userPokemonDTO = null;
         for(UserPokemon userPokemon : userPokemons){
-            if(userPokemon.getId().equals(pokemonId)){
+            if(userPokemon.getPokemon().getId().equals(pokemonId)){
                 userPokemon.setIsPartner(true);
-                userPokemonDTO = new UserPokemonDTO(userPokemon.getId(), userPokemon.getPokemon().getName(),
+                userPokemonDTO = new UserPokemonDTO(userPokemon.getPokemon().getId(), userPokemon.getPokemon().getName(),
                         userPokemon.getPokemon().getUrl(), Arrays.stream(userPokemon.getPokemon().getType().split(","))
                         .map(String::trim)
                         .collect(Collectors.toList()),
