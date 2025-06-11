@@ -80,8 +80,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           debug: true
           script: |
-            cd fortunemon
-            source .env
+            cd fortunemon            
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker rmi mino999/fortunemon-app-dev:latest
