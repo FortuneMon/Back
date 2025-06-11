@@ -80,6 +80,7 @@ jobs:
           debug: true
           script: |
             cd fortunemon
+            source .env
             sudo docker-compose stop
             sudo docker-compose rm -f
             sudo docker rmi mino999/fortunemon-app-dev:latest
