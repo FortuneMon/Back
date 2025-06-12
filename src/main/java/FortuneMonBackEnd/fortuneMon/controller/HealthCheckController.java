@@ -11,5 +11,5 @@ public class HealthCheckController {
     @GetMapping
     public String healthCheck() {
         return "Server is running!";
-
+    }
 }
