@@ -128,25 +128,25 @@ public class FortuneServiceImpl implements FortuneService{
         if(!loveRoutine && !healthRoutine && !wealthRoutine && !growRoutine) {
             userLoveFortune.setFortune(loveFortune);
             userLoveFortune.setUser(user.get());
-            userLoveFortune.setAdvice("루틴을 먼저 설정하세요");
+            userLoveFortune.setAdvice(null);
             userLoveFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userLoveFortune);
 
             userHealthFortune.setFortune(healthFortune);
             userHealthFortune.setUser(user.get());
-            userHealthFortune.setAdvice("루틴을 먼저 설정하세요");
+            userHealthFortune.setAdvice(null);
             userHealthFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userHealthFortune);
 
             userWealthFortune.setFortune(wealthFortune);
             userWealthFortune.setUser(user.get());
-            userWealthFortune.setAdvice("루틴을 먼저 설정하세요");
+            userWealthFortune.setAdvice(null);
             userWealthFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userWealthFortune);
 
             userGrowFortune.setFortune(growFortune);
             userGrowFortune.setUser(user.get());
-            userGrowFortune.setAdvice("루틴을 먼저 설정하세요");
+            userGrowFortune.setAdvice(null);
             userGrowFortune.setDate(LocalDate.now());
             userFortuneRepository.save(userGrowFortune);
         }
