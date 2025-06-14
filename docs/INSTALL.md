@@ -72,7 +72,7 @@ java -jar build/libs/fortunemon-backend.jar
 frontend/.env 파일을 생성 후 아래와 같이 API 서버 주소를 명시합니다:
 
 ```
-VITE_API_URL=http://localhost:8080
+REACT_APP_SERVER_BASE_URL= https://api.fortunemon.shop
 ```
 ② 실행 명령어
 
