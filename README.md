@@ -35,9 +35,10 @@ FortuneMon은 누구나 쉽게 감정 기반 루틴 서비스를 개발하거나
 
 # 📚 문서 가이드
 
-- 🛠️ [설치 및 실행 방법](./docs/INSTALL.md)
-- 💡 [사용법 가이드](./docs/USAGE.md)
-- 🤝 [기여 가이드](./docs/CONTRIBUTING.md) (추후연결)
+- 🛠️ [설치 및 실행 방법](../docs/INSTALL.md)
+- 💡 [사용법 가이드](../docs/USAGE.md)
+- 📜 [API 명세서](https://clumsy-butter-019.notion.site/API-1f326beafea180b4a6bcf87efe606513?source=copy_link)
+- 🤝 [기여 가이드](../docs/CONTRIBUTING.md)
 
 <br />
 
@@ -58,7 +59,7 @@ FortuneMon은 누구나 쉽게 감정 기반 루틴 서비스를 개발하거나
 
 <br />
 
-## ⚙ 기술 스택
+# ⚙ 기술 스택
 ### Back-end
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" width="80">
@@ -95,15 +96,33 @@ FortuneMon은 누구나 쉽게 감정 기반 루틴 서비스를 개발하거나
 
 <br />
 
-## 🛠️ 프로젝트 아키텍쳐
-
+# 🛠️ 프로젝트 아키텍쳐
+-  [프론트 아키텍쳐](https://github.com/FortuneMon/FrontEnd/wiki/%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%ED%96%A5%ED%9B%84-%EA%B3%84%ED%9A%8D#%ED%94%84%EB%A1%A0%ED%8A%B8)
+-  [백앤드 아키텍쳐](https://github.com/FortuneMon/FrontEnd/wiki/%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%95-%EB%B0%8F-%ED%96%A5%ED%9B%84-%EA%B3%84%ED%9A%8D#%EB%B0%B1%EC%95%A4%EB%93%9C)
 
 <br />
 
+## 라이선스
+이 프로젝트는 **MIT 라이선스**에 따라 배포됩니다.
+이 프로젝트는 [**Pokémon API**](https://pokeapi.co/)의 데이터를 사용하고 있으며, 해당 API는 **BSD-3-Clause 라이선스**에 따라 배포됩니다.
+자세한 내용은 `POKEMON-API-LICENSE` 파일을 참고하세요.
+
+- 🎞️ [MIT 라이선스](https://github.com/FortuneMon/.github/blob/main/docs/LICENSE)
+- 🎞️ [Pokemon API(Third Party) 라이선스](https://github.com/FortuneMon/.github/blob/main/docs/POKEMON-API-LICENSE)
+
+<br />
 
 ## 💁‍♂️ 프로젝트 팀원
+
 | Frontend | Frontend | Backend | Backend |
 |:--------:|:--------:|:-------:|:-------:|
 | <img src="https://github.com/kimcodell.png?size=100" width="100" height="100" style="border-radius: 50%;" /> | <img src="https://github.com/bhs3066.png?size=100" width="100" height="100" style="border-radius: 50%;" /> | <img src="https://github.com/MINO1020.png?size=100" width="100" height="100" style="border-radius: 50%;" /> | <img src="https://github.com/Seung-Un.png?size=100" width="100" height="100" style="border-radius: 50%;" /> |
-| [김민혁](https://github.com/kimcodell) | [변현석](https://github.com/bhs3066) | [이민호](https://github.com/MINO1020) | [남승운](https://github.com/Seung-Un) |
+| 김민혁 | 변현석 | 이민호 | 남승운 |
+|[kimcodell](https://github.com/kimcodell)|[bhs3066](https://github.com/bhs3066)|[MINO1020](https://github.com/MINO1020)|[Seung-Un](https://github.com/Seung-Un)|
+| - 루틴 기능 구현<br>- 통계 기능 구현<br>- 인증 기능 구현<br>- 파트너 조언 구현<br>- 컴포넌트/모듈 구조 개선<br>- Redux 상태 관리 도입 | - 레이아웃 구현<br>- 운세 기능 구현<br>- 마이페이지 구현<br>- 포켓몬 기능 구현<br>- 도감/파트너 기능<br>- Vercel 배포 | - 루틴 기능 구현<br>- CI/CD 환경 구성<br>- JWT 인증/인가<br>- Spring Security<br>- 백엔드 아키텍처|- 포켓몬 기능 구현<br>- 몬스터볼 기능 구현<br>- 운세 기능 구현<br>- GPT 연동 개발 |
+
+
+
+
+
 
