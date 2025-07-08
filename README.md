@@ -33,14 +33,6 @@ FortuneMon은 누구나 쉽게 감정 기반 루틴 서비스를 개발하거나
 
 <br />
 
-# 📚 문서 가이드
-
-- 🛠️ [설치 및 실행 방법](../docs/INSTALL.md)
-- 💡 [사용법 가이드](../docs/USAGE.md)
-- 📜 [API 명세서](https://clumsy-butter-019.notion.site/API-1f326beafea180b4a6bcf87efe606513?source=copy_link)
-- 🤝 [기여 가이드](../docs/CONTRIBUTING.md)
-
-<br />
 
 # 🎨 화면 구성
 | Screen #1 | Screen #2 |
